@@ -207,26 +207,26 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
             scenarios.append({
                 'extra_amount': extra,
                 'years_to_payoff': years_to_payoff,
-                'total_paid': result_with_extra['total_paid'],
-                'interest_paid': result_with_extra['interest_paid'],
-                'principal_paid': result_with_extra['principal_paid'],
-                'extra_payments_total': result_with_extra['extra_payment_total'],
+                'total_paid': result_with_extra.get('total_paid', 0),
+                'interest_paid': result_with_extra.get('interest_paid', 0),
+                'principal_paid': result_with_extra.get('principal_paid', 0),
+                'extra_payments_total': result_with_extra.get('extra_payment_total', 0),
                 'savings': savings,
                 'paid_off': True,
-                'net_impact_on_balance': result_with_extra['net_impact_on_balance'],
+                'net_impact_on_balance': result_with_extra.get('net_impact_on_balance', 0),
                 'monthly_payment_description': f"£{base_monthly_payment + extra:.2f}/month (£{base_monthly_payment:.2f} mandatory + £{extra:.2f} extra)"
             })
         else:
             scenarios.append({
                 'extra_amount': extra,
                 'years_to_payoff': years_left,
-                'total_paid': result_with_extra['total_paid'],
-                'interest_paid': result_with_extra['interest_paid'],
-                'principal_paid': result_with_extra['principal_paid'],
-                'extra_payments_total': result_with_extra['extra_payment_total'],
-                'savings': total_with_standard_payments - result_with_extra['total_paid'],
+                'total_paid': result_with_extra.get('total_paid', 0) if result_with_extra else 0,
+                'interest_paid': result_with_extra.get('interest_paid', 0) if result_with_extra else 0,
+                'principal_paid': result_with_extra.get('principal_paid', 0) if result_with_extra else 0,
+                'extra_payments_total': result_with_extra.get('extra_payment_total', 0) if result_with_extra else 0,
+                'savings': (total_with_standard_payments - result_with_extra.get('total_paid', 0)) if result_with_extra else 0,
                 'paid_off': False,
-                'net_impact_on_balance': result_with_extra['net_impact_on_balance'],
+                'net_impact_on_balance': result_with_extra.get('net_impact_on_balance', 0) if result_with_extra else 0,
                 'monthly_payment_description': f"£{base_monthly_payment + extra:.2f}/month (£{base_monthly_payment:.2f} mandatory + £{extra:.2f} extra)"
             })
     
