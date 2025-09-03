@@ -265,7 +265,7 @@ def calculate():
         result = calculate_loan_repayment_with_time(balance, salary, plan_type, years_left)
         
         if not result:
-            return jsonify({'error': 'Invalid repayment plan selected'}), 400
+            return jsonify({'error': 'Failed to calculate loan repayment'}), 400
         
         # Get plan details
         plan_details = get_loan_details(plan_type)
@@ -276,35 +276,42 @@ def calculate():
         # Calculate custom extra payment if provided
         custom_result = None
         if 'extra_payment' in data and data['extra_payment']:
-            extra_payment = float(data['extra_payment'])
+            try:
+                extra_payment = float(data['extra_payment'])
+                if extra_payment < 0:
+                    return jsonify({'error': 'Extra payment cannot be negative'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'Invalid extra payment value'}), 400
+                
             custom_result = calculate_loan_repayment_with_time(balance, salary, plan_type, years_left, extra_payment)
             
-            # Calculate if it pays off early
-            plan_details_temp = get_loan_details(plan_type)
-            monthly_interest = plan_details_temp['interest_rate'] / 12
-            base_monthly_payment = calculate_monthly_payment(salary, plan_details_temp['threshold'], plan_details_temp['repayment_rate'])
-            
-            test_balance = balance
-            months_to_payoff = 0
-            
-            for month in range(int(years_left * 12)):
-                if test_balance <= 0:
-                    break
+            if custom_result:
+                # Calculate if it pays off early
+                plan_details_temp = get_loan_details(plan_type)
+                monthly_interest = plan_details_temp['interest_rate'] / 12
+                base_monthly_payment = max(0, calculate_monthly_payment(salary, plan_details_temp['threshold'], plan_details_temp['repayment_rate']))
                 
-                interest = test_balance * monthly_interest
-                payment = base_monthly_payment + extra_payment
-                payment_this_month = min(payment, test_balance + interest)
+                test_balance = balance
+                months_to_payoff = 0
                 
-                test_balance = test_balance + interest - payment_this_month
-                months_to_payoff += 1
+                for month in range(int(years_left * 12)):
+                    if test_balance <= 0:
+                        break
+                    
+                    interest = test_balance * monthly_interest
+                    payment = base_monthly_payment + extra_payment
+                    payment_this_month = min(payment, test_balance + interest) if payment > 0 else 0
+                    
+                    test_balance = test_balance + interest - payment_this_month
+                    months_to_payoff += 1
+                    
+                    if test_balance <= 0.01:
+                        break
                 
-                if test_balance <= 0.01:
-                    break
-            
-            custom_result['early_payoff'] = test_balance <= 0.01
-            if custom_result['early_payoff']:
-                custom_result['years_to_payoff'] = months_to_payoff / 12
-                custom_result['savings'] = result['total_paid'] - custom_result['total_paid']
+                custom_result['early_payoff'] = test_balance <= 0.01
+                if custom_result['early_payoff']:
+                    custom_result['years_to_payoff'] = months_to_payoff / 12
+                    custom_result['savings'] = result['total_paid'] - custom_result['total_paid']
         
         return jsonify({
             'result': result,
@@ -314,10 +321,13 @@ def calculate():
             'custom_result': custom_result
         })
         
-    except (ValueError, KeyError) as e:
-        return jsonify({'error': 'Please enter valid values'}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        # Log the actual error for debugging
+        print(f"Unexpected error: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
 
 if __name__ == '__main__':
     import os
