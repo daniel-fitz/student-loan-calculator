@@ -169,7 +169,7 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
     
     monthly_interest = plan_details['interest_rate'] / 12
     months_left = years_left * 12
-    base_monthly_payment = calculate_monthly_payment(salary, plan_details['threshold'], plan_details['repayment_rate'])
+    base_monthly_payment = max(0, calculate_monthly_payment(salary, plan_details['threshold'], plan_details['repayment_rate']))
     
     # Get standard payment result
     standard_result = calculate_loan_repayment_with_time(balance, salary, plan_type, years_left)
@@ -179,9 +179,6 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
     
     # Test different extra payment amounts
     for extra in [50, 100, 200, 500]:
-        if base_monthly_payment + extra <= 0:
-            continue
-            
         # Calculate detailed breakdown with this extra payment
         result_with_extra = calculate_loan_repayment_with_time(balance, salary, plan_type, years_left, extra)
         
@@ -196,7 +193,7 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
                 
                 interest = test_balance * monthly_interest
                 payment = base_monthly_payment + extra
-                payment_this_month = min(payment, test_balance + interest)
+                payment_this_month = min(payment, test_balance + interest) if payment > 0 else 0
                 
                 test_balance = test_balance + interest - payment_this_month
                 months_to_payoff += 1
@@ -213,10 +210,11 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
                 'total_paid': result_with_extra['total_paid'],
                 'interest_paid': result_with_extra['interest_paid'],
                 'principal_paid': result_with_extra['principal_paid'],
-                'extra_payments_total': extra * months_to_payoff,
+                'extra_payments_total': result_with_extra['extra_payment_total'],
                 'savings': savings,
                 'paid_off': True,
-                'net_impact_on_balance': result_with_extra['net_impact_on_balance']
+                'net_impact_on_balance': result_with_extra['net_impact_on_balance'],
+                'monthly_payment_description': f"£{base_monthly_payment + extra:.2f}/month (£{base_monthly_payment:.2f} mandatory + £{extra:.2f} extra)"
             })
         else:
             scenarios.append({
@@ -225,10 +223,11 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
                 'total_paid': result_with_extra['total_paid'],
                 'interest_paid': result_with_extra['interest_paid'],
                 'principal_paid': result_with_extra['principal_paid'],
-                'extra_payments_total': result_with_extra['extra_payment_portion'],
+                'extra_payments_total': result_with_extra['extra_payment_total'],
                 'savings': total_with_standard_payments - result_with_extra['total_paid'],
                 'paid_off': False,
-                'net_impact_on_balance': result_with_extra['net_impact_on_balance']
+                'net_impact_on_balance': result_with_extra['net_impact_on_balance'],
+                'monthly_payment_description': f"£{base_monthly_payment + extra:.2f}/month (£{base_monthly_payment:.2f} mandatory + £{extra:.2f} extra)"
             })
     
     return scenarios
