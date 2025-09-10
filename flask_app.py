@@ -11,6 +11,17 @@ app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this')
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 
+# Check if Stripe keys are configured
+if not stripe.api_key:
+    print("ERROR: STRIPE_SECRET_KEY environment variable not set")
+else:
+    print(f"Stripe secret key loaded: {stripe.api_key[:7]}...")
+
+if not STRIPE_PUBLISHABLE_KEY:
+    print("ERROR: STRIPE_PUBLISHABLE_KEY environment variable not set")
+else:
+    print(f"Stripe publishable key loaded: {STRIPE_PUBLISHABLE_KEY[:7]}...")
+
 def get_loan_details(plan_type):
     """
     Returns the repayment threshold, interest rate, and write-off period for each plan type
@@ -219,6 +230,12 @@ def index():
 @app.route('/create-payment-intent', methods=['POST'])
 def create_payment_intent():
     try:
+        print("=== Creating Payment Intent ===")
+        print(f"Stripe API key available: {bool(stripe.api_key)}")
+        
+        if not stripe.api_key:
+            return jsonify({'error': 'Stripe not configured - missing secret key'}), 500
+        
         # Create a PaymentIntent with the order amount and currency
         intent = stripe.PaymentIntent.create(
             amount=99,  # 99 pence
@@ -229,10 +246,19 @@ def create_payment_intent():
             }
         )
         
+        print(f"Payment intent created successfully: {intent.id}")
+        
         return jsonify({
             'client_secret': intent.client_secret
         })
+    except stripe.error.AuthenticationError as e:
+        print(f"Stripe Authentication Error: {str(e)}")
+        return jsonify({'error': 'Invalid Stripe credentials'}), 400
+    except stripe.error.InvalidRequestError as e:
+        print(f"Stripe Invalid Request Error: {str(e)}")
+        return jsonify({'error': f'Invalid request: {str(e)}'}), 400
     except Exception as e:
+        print(f"Unexpected error: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
 @app.route('/payment-success', methods=['POST'])
