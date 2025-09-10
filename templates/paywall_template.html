@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Student Loan Calculator - Access Required</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .paywall-container {
+            max-width: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .price {
+            font-size: 3em;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 20px 0;
+        }
+        
+        .features {
+            text-align: left;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .feature-icon {
+            color: #4CAF50;
+            margin-right: 15px;
+            font-size: 1.3em;
+        }
+        
+        .payment-form {
+            margin-top: 30px;
+        }
+        
+        #card-element {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e1e5e9;
+            margin: 20px 0;
+        }
+        
+        #card-element.focused {
+            border-color: #2196F3;
+        }
+        
+        .pay-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s ease;
+        }
+        
+        .pay-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+        
+        .pay-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error {
+            color: #f44336;
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 5px solid #f44336;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2196F3;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .security-note {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .lock-icon {
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="paywall-container">
+        <div class="header">
+            <h1>🎓 Student Loan Calculator</h1>
+            <p>Professional loan analysis & strategy tool</p>
+        </div>
+        
+        <div class="content">
+            <div class="price">£0.99</div>
+            
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">✅</span>
+                    <span>Accurate UK student loan calculations</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✅</span>
+                    <span>All plan types (1, 2, 4, 5 & Postgraduate)</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✅</span>
+                    <span>Extra payment scenario analysis</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✅</span>
+                    <span>Potential savings calculations</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✅</span>
+                    <span>Instant access after payment</span>
+                </div>
+            </div>
+            
+            <form id="payment-form" class="payment-form">
+                <div id="card-element">
+                    <!-- Stripe Elements will create form elements here -->
+                </div>
+                
+                <button type="submit" id="submit-payment" class="pay-button">
+                    Pay £0.99 & Get Instant Access
+                </button>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Processing payment...</p>
+                </div>
+                
+                <div class="error" id="card-errors"></div>
+            </form>
+            
+            <div class="security-note">
+                <span class="lock-icon">🔒</span>
+                Secure payment powered by Stripe. Your card details are never stored on our servers.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Stripe
+        const stripe = Stripe('{{ stripe_publishable_key }}');
+        const elements = stripe.elements();
+        
+        // Create card element
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#424770',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                },
+            },
+        });
+        
+        cardElement.mount('#card-element');
+        
+        // Handle real-time validation errors from the card Element
+        cardElement.on('change', ({error}) => {
+            const displayError = document.getElementById('card-errors');
+            if (error) {
+                displayError.textContent = error.message;
+                displayError.style.display = 'block';
+            } else {
+                displayError.style.display = 'none';
+            }
+        });
+        
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-payment');
+        const loading = document.getElementById('loading');
+        
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            submitButton.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                // Create PaymentIntent on the server
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const {client_secret, error} = await response.json();
+                
+                if (error) {
+                    throw new Error(error);
+                }
+                
+                // Confirm payment with Stripe
+                const {error: stripeError} = await stripe.confirmCardPayment(client_secret, {
+                    payment_method: {
+                        card: cardElement,
+                    }
+                });
+                
+                if (stripeError) {
+                    throw new Error(stripeError.message);
+                } else {
+                    // Payment succeeded, redirect to success page
+                    window.location.href = '/payment-success';
+                }
+                
+            } catch (err) {
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = err.message;
+                errorElement.style.display = 'block';
+            } finally {
+                submitButton.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
