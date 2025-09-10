@@ -5,14 +5,14 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this-in-production')
 
 # Stripe configuration - Using restricted key for better security
 stripe.api_key = os.environ.get('STRIPE_RESTRICTED_KEY')  # Use restricted key instead
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 
-# Price in cents (e.g., $9.99 = 999 cents)
-PAYMENT_AMOUNT = 999  # Adjust this to your desired price
+# Price in pence (99p = 99 pence)
+PAYMENT_AMOUNT = 99
 
 def get_loan_details(plan_type):
     """
@@ -236,9 +236,9 @@ def create_payment_intent():
         # Create a PaymentIntent with Stripe
         intent = stripe.PaymentIntent.create(
             amount=PAYMENT_AMOUNT,
-            currency='gbp',  # Change to 'usd' if needed
+            currency='gbp',
             metadata={
-                'session_id': session.get('session_id', 'unknown')
+                'product': 'student_loan_calculator_pro'
             }
         )
         
@@ -250,7 +250,7 @@ def create_payment_intent():
 
 @app.route('/payment-success')
 def payment_success():
-    # Verify the payment was successful (you might want to add webhook verification)
+    # Mark payment as completed in session
     session['payment_completed'] = True
     return render_template('payment_success.html')
 
