@@ -1,8 +1,15 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import math
+import os
+import stripe
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this')
+
+# Stripe configuration
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
 
 def get_loan_details(plan_type):
     """
@@ -198,12 +205,62 @@ def calculate_extra_payment_scenarios(balance, salary, plan_type, years_left):
     
     return scenarios
 
+def has_paid_access():
+    """Check if user has paid for access"""
+    return session.get('paid_access', False)
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if has_paid_access():
+        return render_template('calculator.html', stripe_publishable_key=STRIPE_PUBLISHABLE_KEY)
+    else:
+        return render_template('paywall.html', stripe_publishable_key=STRIPE_PUBLISHABLE_KEY)
+
+@app.route('/create-payment-intent', methods=['POST'])
+def create_payment_intent():
+    try:
+        # Create a PaymentIntent with the order amount and currency
+        intent = stripe.PaymentIntent.create(
+            amount=99,  # 99 pence
+            currency='gbp',
+            description='Access to UK Student Loan Calculator',
+            metadata={
+                'product': 'calculator_access'
+            }
+        )
+        
+        return jsonify({
+            'client_secret': intent.client_secret
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/payment-success', methods=['POST'])
+def payment_success():
+    try:
+        data = request.get_json()
+        payment_intent_id = data.get('payment_intent_id')
+        
+        # Verify the payment with Stripe
+        payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+        
+        if payment_intent.status == 'succeeded':
+            # Grant access
+            session['paid_access'] = True
+            session.permanent = True  # Make session permanent
+            return jsonify({'success': True})
+        else:
+            return jsonify({'error': 'Payment not successful'}), 400
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
+    # Check if user has paid for access
+    if not has_paid_access():
+        return jsonify({'error': 'Payment required to access calculator'}), 403
+    
     try:
         data = request.get_json()
         

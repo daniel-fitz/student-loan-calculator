@@ -458,8 +458,8 @@
                     <span class="result-value">${data.years_left} years</span>
                 </div>
                 <div class="result-item">
-                    <span class="result-label">Balance Change Monthly (Interest Increase - Total Payments):</span>
-                    <span class="result-value">£${(data.result.monthly_payment - (data.custom_result ? parseFloat(document.getElementById('extraPayment').value) : 0)).toFixed(2)}</span>
+                    <span class="result-label">Monthly payment:</span>
+                    <span class="result-value">£${data.result.monthly_payment.toFixed(2)}</span>
                 </div>
             `;
             
@@ -570,15 +570,6 @@
             } else {
                 customResult.style.display = 'none';
             }
-        }
-        
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-GB', {
-                style: 'currency',
-                currency: 'GBP',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount);
         }
     </script>
 </body>
