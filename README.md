@@ -4,7 +4,7 @@
 
 Calculate your monthly payments, see when you'll be debt-free, and discover if overpaying could save you thousands.
 
-[![Live Calculator](https://img.shields.io/badge/Try%20It%20Now-Live%20Calculator-blue?style=for-the-badge)](https://your-domain.com)
+[![Live Calculator](https://img.shields.io/badge/Try%20It%20Now-Live%20Calculator-blue?style=for-the-badge)](https://studentloanrepaymentcalculators.com)
 
 ---
 
@@ -18,7 +18,7 @@ Most student loan calculators give you basic numbers. Ours shows you **strategie
 - 📈 **Career Planning** - Premium features model salary growth impact
 - 🔒 **100% Private** - Your financial data stays on your device
 
-## 🚀 [Start Calculating Now →](https://your-domain.com)
+## 🚀 [Start Calculating Now →](https://studentloanrepaymentcalculators.com)
 
 ---
 
@@ -74,7 +74,7 @@ Upgrade for advanced analysis at just **£4.99 (one-time payment)**:
 - 💼 **Investment vs Overpayment** - Should you invest the money instead?
 - 🎓 **Lifetime Access** - All future updates included
 
-[Unlock Premium Features →](https://your-domain.com)
+[Unlock Premium Features →](https://studentloanrepaymentcalculators.com)
 
 ## 🧮 Supported Loan Plans
 
@@ -103,10 +103,10 @@ Upgrade for advanced analysis at just **£4.99 (one-time payment)**:
 
 Understanding student loans can be confusing. We've created guides to help:
 
-- 📖 [Plan 5 vs Plan 2: Complete Comparison](https://your-domain.com/blog/plan-5-vs-plan-2)
-- 📖 [Should You Overpay Your Student Loan?](https://your-domain.com/blog/overpayment-guide)
-- 📖 [How Student Loans Affect Mortgage Applications](https://your-domain.com/blog/mortgage-impact)
-- 📖 [Student Loan Tax Guide for High Earners](https://your-domain.com/blog/tax-guide)
+- 📖 [Plan 5 vs Plan 2: Complete Comparison](https://studentloanrepaymentcalculators.com/blog/plan-5-vs-plan-2)
+- 📖 [Should You Overpay Your Student Loan?](https://studentloanrepaymentcalculators.com/blog/overpayment-guide)
+- 📖 [How Student Loans Affect Mortgage Applications](https://studentloanrepaymentcalculators.com/blog/mortgage-impact)
+- 📖 [Student Loan Tax Guide for High Earners](https://studentloanrepaymentcalculators.com/blog/tax-guide)
 
 ## 🔐 Privacy & Security
 
@@ -147,7 +147,7 @@ Yes! 30-day money-back guarantee on premium features if you're not satisfied.
 
 Ready to understand your student loan and potentially save thousands?
 
-### [**Calculate Your Repayments →**](https://your-domain.com)
+### [**Calculate Your Repayments →**](https://studentloanrepaymentcalculators.com)
 
 *Takes less than 60 seconds. No signup required.*
 
@@ -156,8 +156,8 @@ Ready to understand your student loan and potentially save thousands?
 ## 📞 Support
 
 - 💬 **Live Chat**: Available on the website
-- 📧 **Email**: support@your-domain.com
-- 📚 **Help Center**: [your-domain.com/help](https://your-domain.com/help)
+- 📧 **Email**: support@studentloanrepaymentcalculators.com
+- 📚 **Help Center**: [studentloanrepaymentcalculators.com/help](https://studentloanrepaymentcalculators.com/help)
 - 🐦 **Twitter**: [@YourHandle](https://twitter.com/yourhandle)
 
 ## 🌟 Stay Updated
@@ -196,7 +196,7 @@ Found a bug? Have a suggestion? We'd love to hear from you!
 
 *Helping students make smarter financial decisions since 2025*
 
-### [Start Your Free Calculation →](https://your-domain.com)
+### [Start Your Free Calculation →](https://studentloanrepaymentcalculators.com)
 
 ![GitHub stars](https://img.shields.io/github/stars/daniel-fitz/student-loan-calculator?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/daniel-fitz/student-loan-calculator?style=social)
