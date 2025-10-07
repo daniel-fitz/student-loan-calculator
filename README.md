@@ -99,15 +99,6 @@ Upgrade for advanced analysis at just **£4.99 (one-time payment)**:
 > *"The salary progression feature helped me understand how my teaching career would affect my loan. Totally worth the £5!"*  
 > **— Emma, Teacher**
 
-## 🎓 Educational Resources
-
-Understanding student loans can be confusing. We've created guides to help:
-
-- 📖 [Plan 5 vs Plan 2: Complete Comparison](https://studentloanrepaymentcalculators.com/blog/plan-5-vs-plan-2)
-- 📖 [Should You Overpay Your Student Loan?](https://studentloanrepaymentcalculators.com/blog/overpayment-guide)
-- 📖 [How Student Loans Affect Mortgage Applications](https://studentloanrepaymentcalculators.com/blog/mortgage-impact)
-- 📖 [Student Loan Tax Guide for High Earners](https://studentloanrepaymentcalculators.com/blog/tax-guide)
-
 ## 🔐 Privacy & Security
 
 - ✅ No registration required for basic calculator
@@ -150,21 +141,6 @@ Ready to understand your student loan and potentially save thousands?
 ### [**Calculate Your Repayments →**](https://studentloanrepaymentcalculators.com)
 
 *Takes less than 60 seconds. No signup required.*
-
----
-
-## 📞 Support
-
-- 💬 **Live Chat**: Available on the website
-- 📧 **Email**: support@studentloanrepaymentcalculators.com
-- 📚 **Help Center**: [studentloanrepaymentcalculators.com/help](https://studentloanrepaymentcalculators.com/help)
-- 🐦 **Twitter**: [@YourHandle](https://twitter.com/yourhandle)
-
-## 🌟 Stay Updated
-
-- **Follow us** on social media for student loan tips
-- **Subscribe** to our newsletter for updates on rate changes
-- **Star this repo** to show your support
 
 ## 📊 By The Numbers
 
